@@ -8,6 +8,7 @@ env:
     SONARQUBE_URL: "http://3.18.47.100:9000"
     ORGANIZATION : "tandtconsulting"
     DEV_PROJECT_NAME: "PetStoreAPI"
+    
 phases:
   install:
     commands:
@@ -16,7 +17,7 @@ phases:
                                    --s3-bucket codepipeline-us-east-1-codebuild-with-postman
                                    --s3-prefix api-code
                                    --output-template-file petstore-api-output.yaml
-      echo "project build complated"
+      - echo "project build complated"
   
   pre_build:
     commands:
