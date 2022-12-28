@@ -11,6 +11,11 @@ env:
 phases:
   install:
     commands:
+      
+      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+      - unzip sonar-scanner-cli-4.8.0.2856-linux.zip
+      - export PATH=$PATH:./sonar-scanner-4.8.0.2856-linux/bin/
+    
       - cd 01api
       - aws cloudformation package --template-file petstore-api.yaml
                                    --s3-bucket codepipeline-us-east-1-codebuild-with-postman
