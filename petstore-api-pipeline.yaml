@@ -109,6 +109,7 @@ Resources:
               - "codebuild:CreateReport"
               - "codebuild:UpdateReport"
               - "codebuild:BatchPutTestCases"
+              - "secretsmanager:GetSecretValue"
             Resource:
               - "*"
           - Effect: "Allow"
