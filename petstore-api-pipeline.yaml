@@ -209,6 +209,39 @@ Resources:
         Value:
           Fn::Sub: ${AWS::StackName}-petstore-api-stack-project
 
+  #code review - SonarQube scanner (see sonarqube_buildspec.yml)
+  PetStoreAPISAMCodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: petstore-api-sonarqube-project
+      Description: CodeReview project using SonaQube
+      ServiceRole:
+        Fn::GetAtt: [ CodeBuildServiceRole, Arn ]
+      Artifacts:
+        Type: S3
+        Location:
+          Ref: CodePipelineArtifactBucket
+        Name:
+          Fn::Sub: ${AWS::StackName}-petstore-api-stack-codebuild-project
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/nodejs:8.11.0
+      Source:
+        Location: !Join
+        - ''
+        - - 'https://github.com/'
+          - !Ref GitHubUser
+          - '/'
+          - !Ref GitHubRepositoryName
+        Type:  GITHUB
+        BuildSpec: 01api/sonarqube-buildspec.yml
+      TimeoutInMinutes: 10
+      Tags:
+      - Key: Name
+        Value:
+          Fn::Sub: ${AWS::StackName}-petstore-api-sonarqube-project
+
   #code build - api testing using Newman to execute Postman test def (see buildspec.yml)
   PostmanNewmanCodeBuildProject:
     Type: AWS::CodeBuild::Project
@@ -283,6 +316,22 @@ Resources:
       - Name: Build
         Actions:
         - Name: BuildPetStoreAPI
+          ActionTypeId:
+            Owner: AWS
+            Category: Build
+            Version: 1
+            Provider: CodeBuild
+          Configuration:
+            ProjectName: !Ref PetStoreAPISAMCodeBuildProject
+          InputArtifacts:
+          - Name: 'PetStoreAPI-SourceArtifact'
+          OutputArtifacts:
+          - Name: 'PetStoreAPI-BuildArtifact'
+          RunOrder: 1
+
+      - Name: CodeReview
+        Actions:
+        - Name: CodeReviewPetStoreAPI
           ActionTypeId:
             Owner: AWS
             Category: Build
