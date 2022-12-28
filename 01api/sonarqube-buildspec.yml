@@ -2,8 +2,8 @@ version: 0.2
 
 env:
   secrets-manager:
-    Organization: prod/sonarqube:Organization    
-    HOST: prod/sonarqube:HOST    
+    Organization: prod/sonarqube:Organization
+    HOST: prod/sonarqube:Host
     LOGIN: prod/sonarqube:SonarToken
     Project: prod/sonarqube:Project
 
