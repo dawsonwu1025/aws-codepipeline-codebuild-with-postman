@@ -11,22 +11,27 @@ env:
 phases:
   install:
     commands:
-      
-      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
-      - unzip sonar-scanner-cli-4.8.0.2856-linux.zip
-      - export PATH=./sonar-scanner-4.8.0.2856-linux/bin:$PATH
-      - echo $PATH
-      
-      
       - cd 01api
       - aws cloudformation package --template-file petstore-api.yaml
                                    --s3-bucket codepipeline-us-east-1-codebuild-with-postman
                                    --s3-prefix api-code
                                    --output-template-file petstore-api-output.yaml
+      echo "project build complated"
+  
+  pre_build:
+    commands:
+      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+      - unzip sonar-scanner-cli-4.8.0.2856-linux.zip
+      - mv sonar-scanner-4.8.0.2856-linux /opt/sonar-scanner
+      - chmod -R 775 /opt/sonar-scanner
+      - export PATH=$PATH:/opt/sonar-scanner/bin/
+      - echo $PATH
+      - echo "stage pre_build completed"
+  
   build:
     commands:
-      - sonar-scanner -Dsonar.sources=. -Dproject.settings=sonar-project.properties -Dsonar.host.url=$SONARQUBE_URL -Dsonar.login=$SONARQUBE_TOKEN /o:$ORGANIZATION /k:$DEV_PROJECT_NAME > sonarqube_scanreport.json
-      - echo "build stage and code quality scan are completed"
+      - /opt/sonar-scanner/bin/sonar-scanner -Dsonar.sources=. -Dproject.settings=sonar-project.properties -Dsonar.host.url=$SONARQUBE_URL -Dsonar.login=$SONARQUBE_TOKEN /o:$ORGANIZATION /k:$DEV_PROJECT_NAME > sonarqube_scanreport.json
+      - echo "SonarQube scan completed"
       
 artifacts:
   type: zip
