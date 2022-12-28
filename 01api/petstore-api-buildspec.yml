@@ -1,14 +1,5 @@
 version: 0.2
 
-env:
-  secrets-manager:
-    SONARQUBE_TOKEN: "arn:aws:secretsmanager:us-east-1:885189625670:secret:codepipeline/petstoreapi-4EiZ7R"
-  
-  variables:
-    SONARQUBE_URL: "http://3.18.47.100:9000"
-    ORGANIZATION : "tandtconsulting"
-    PROJECT_NAME: "PetStoreAPI"
-    
 phases:
   install:
     commands:
@@ -18,22 +9,6 @@ phases:
                                    --s3-prefix api-code
                                    --output-template-file petstore-api-output.yaml
       - echo "project build complated"
-  
-  pre_build:
-    commands:
-      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
-      - unzip sonar-scanner-cli-4.8.0.2856-linux.zip
-      - mv sonar-scanner-4.8.0.2856-linux /opt/sonar-scanner
-      - chmod -R 775 /opt/sonar-scanner
-      - export PATH=$PATH:/opt/sonar-scanner/bin/
-      - echo $PATH
-      - echo "stage pre_build completed"
-  
-  build:
-    commands:
-      - echo $SONARQUBE_TOKEN
-      - /opt/sonar-scanner/bin/sonar-scanner -Dsonar.sources=. -Dproject.settings=sonar-project.properties -Dsonar.host.url=$SONARQUBE_URL -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=$PROJECT_NAME -Dsonar.organization=$ORGANIZATION> sonarqube_scanreport.json
-      - echo "SonarQube scan completed"
       
 artifacts:
   type: zip
