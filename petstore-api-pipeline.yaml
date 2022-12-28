@@ -210,7 +210,7 @@ Resources:
           Fn::Sub: ${AWS::StackName}-petstore-api-stack-project
 
   #code review - SonarQube scanner (see sonarqube_buildspec.yml)
-  PetStoreAPISAMCodeBuildProject:
+  PetStoreAPICodeReviewProject:
     Type: AWS::CodeBuild::Project
     Properties:
       Name: petstore-api-sonarqube-project
@@ -222,7 +222,7 @@ Resources:
         Location:
           Ref: CodePipelineArtifactBucket
         Name:
-          Fn::Sub: ${AWS::StackName}-petstore-api-stack-codebuild-project
+          Fn::Sub: ${AWS::StackName}-petstore-api-sonarqube-project
       Environment:
         Type: LINUX_CONTAINER
         ComputeType: BUILD_GENERAL1_SMALL
@@ -338,11 +338,11 @@ Resources:
             Version: 1
             Provider: CodeBuild
           Configuration:
-            ProjectName: !Ref PetStoreAPISAMCodeBuildProject
+            ProjectName: !Ref PetStoreAPICodeReviewProject
           InputArtifacts:
           - Name: 'PetStoreAPI-SourceArtifact'
           OutputArtifacts:
-          - Name: 'PetStoreAPI-BuildArtifact'
+          - Name: 'PetStoreAPI-CodeReviewArtifact'
           RunOrder: 1
 
       - Name: Deploy
