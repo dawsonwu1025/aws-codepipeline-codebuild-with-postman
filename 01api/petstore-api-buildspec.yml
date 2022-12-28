@@ -1,4 +1,13 @@
 version: 0.2
+
+env:
+  secrets-manager:
+    SONARQUBE_TOKEN: "arn:aws:secretsmanager:us-east-1:885189625670:secret:codepipeline/petstoreapi-4EiZ7R"
+  
+  variables:
+    SONARQUBE_URL: "http://3.18.47.100:9000"
+    ORGANIZATION : "tandtconsulting"
+    DEV_PROJECT_NAME: "PetStoreAPI"
 phases:
   install:
     commands:
@@ -7,6 +16,11 @@ phases:
                                    --s3-bucket codepipeline-us-east-1-codebuild-with-postman
                                    --s3-prefix api-code
                                    --output-template-file petstore-api-output.yaml
+  build:
+    commands:
+      - sonar-scanner -Dsonar.sources=. -Dproject.settings=sonar-project.properties -Dsonar.host.url=$SONARQUBE_URL -Dsonar.login=$SONARQUBE_TOKEN /o:$ORGANIZATION /k:$DEV_PROJECT_NAME > sonarqube_scanreport.json
+      - echo "build stage and code quality scan are completed"
+      
 artifacts:
   type: zip
   files:
