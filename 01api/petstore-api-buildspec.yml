@@ -7,7 +7,7 @@ env:
   variables:
     SONARQUBE_URL: "http://3.18.47.100:9000"
     ORGANIZATION : "tandtconsulting"
-    DEV_PROJECT_NAME: "PetStoreAPI"
+    PROJECT_NAME: "PetStoreAPI"
     
 phases:
   install:
@@ -31,7 +31,7 @@ phases:
   
   build:
     commands:
-      - /opt/sonar-scanner/bin/sonar-scanner -Dsonar.sources=. -Dproject.settings=sonar-project.properties -Dsonar.host.url=$SONARQUBE_URL -Dsonar.login=$SONARQUBE_TOKEN /o:$ORGANIZATION /k:$DEV_PROJECT_NAME > sonarqube_scanreport.json
+      - /opt/sonar-scanner/bin/sonar-scanner -Dsonar.sources=. -Dproject.settings=sonar-project.properties -Dsonar.host.url=$SONARQUBE_URL -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=$PROJECT_NAME -Dsonar.organization=$ORGANIZATION> sonarqube_scanreport.json
       - echo "SonarQube scan completed"
       
 artifacts:
