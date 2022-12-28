@@ -31,6 +31,7 @@ phases:
   
   build:
     commands:
+      - echo $SONARQUBE_TOKEN
       - /opt/sonar-scanner/bin/sonar-scanner -Dsonar.sources=. -Dproject.settings=sonar-project.properties -Dsonar.host.url=$SONARQUBE_URL -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=$PROJECT_NAME -Dsonar.organization=$ORGANIZATION> sonarqube_scanreport.json
       - echo "SonarQube scan completed"
       
