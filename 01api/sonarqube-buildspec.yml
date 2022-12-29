@@ -24,11 +24,10 @@ phases:
       - echo "Stage pre_build completed"
   build:
     commands:
-      - echo $CODEBUILD_SRC_DIR
       - /opt/sonar-scanner/bin/sonar-scanner -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization > sonarqube_scanreport.json
       - echo "Code Review stage completed"
-      - cat sonarqube_scanreport.json
-      
+
+/*      
   post_build:
     commands:
       - sonar_link=$(cat sonarqube_scanreport.json | egrep -o "you can browse http://[^, ]+")
@@ -68,6 +67,7 @@ phases:
           echo "quality_status == unexpected"
           exit 1;
         fi
+*/
 
 artifacts:
   type: zip
