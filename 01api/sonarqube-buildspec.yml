@@ -10,7 +10,9 @@ env:
 phases:
   install:
     runtime-versions:
-      java: openjdk8
+      php: 7.3
+      java: corretto11
+      
   pre_build:
     commands:
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
@@ -22,7 +24,7 @@ phases:
       - echo "Stage pre_build completed"
   build:
     commands:
-      - echo $
+      - echo $CODEBUILD_SRC_DIR
       - /opt/sonar-scanner/bin/sonar-scanner -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization -Dsonar.sources=.> sonarqube_scanreport.json
       - echo "Code Review stage completed"
       
