@@ -25,14 +25,17 @@ phases:
   build:
     commands:
       - echo $CODEBUILD_SRC_DIR
-      - /opt/sonar-scanner/bin/sonar-scanner -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization > sonarqube_scanreport.json
+      - /opt/sonar-scanner/bin/sonar-scanner -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization -Dsonar.scm.provider=git> sonarqube_scanreport.json
       - echo "Code Review stage completed"
       - cat sonarqube_scanreport.json
       
   post_build:
     commands:
       - sonar_link=$(cat sonarqube_scanreport.json | egrep -o "you can browse http://[^, ]+")
+      - echo $sonar_link
       - sonar_task_id=$(cat sonarqube_scanreport.json | egrep -o "task\?id=[^ ]+" | cut -d'=' -f2)
+      - echo $sonar_task_id
+      
       # Allow time for SonarQube background task to complete
       - |
         stat="PENDING";
